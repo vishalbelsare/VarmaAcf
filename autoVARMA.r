@@ -80,7 +80,7 @@ autoVARMA <- function(phi,theta,phiseas,thetaseas,sigma,season,grid=1000,maxlag)
   {
     p <- dim(poly.array)[3]-1
     N <- dim(poly.array)[1]
-    poly.0 <- poly.array[,,1]
+    poly.0 <- as.matrix(poly.array[,,1])
     ar.poly <- det(poly.0)
     r <- p*(N-1)+1
     adj.array <- array(0,c(N,N,r))
@@ -98,6 +98,7 @@ autoVARMA <- function(phi,theta,phiseas,thetaseas,sigma,season,grid=1000,maxlag)
     { ar.poly <- polymult(ar.poly,c(1,-poly.evals[j])) }
     ar.poly <- Re(ar.poly)
 
+    if(r>1) {
     for(j in 2:r)
     {
       adj.array[,,j] <- ar.poly[j]*solve(poly.0)
@@ -106,7 +107,7 @@ autoVARMA <- function(phi,theta,phiseas,thetaseas,sigma,season,grid=1000,maxlag)
         adj.array[,,j] <- adj.array[,,j] - solve(poly.0) %*%
           poly.array[,,k+1] %*% adj.array[,,j-k]
       }
-    } }
+    } } }
 
     return(list(adj.array,ar.poly))
   }
